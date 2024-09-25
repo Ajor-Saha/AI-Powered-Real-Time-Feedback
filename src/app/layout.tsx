@@ -7,8 +7,8 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Fintech App",
-  description: "User personlized financial dashboard",
+  title: "AI Powered Sentiment Analysis",
+  description: "AI Powered Sentiment Analysis Web app. Customer Feedback for your business",
 };
 
 export default function RootLayout({

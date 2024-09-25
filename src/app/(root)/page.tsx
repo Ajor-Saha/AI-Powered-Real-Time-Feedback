@@ -250,7 +250,7 @@ const Home = () => {
               <Label className="text-sm text-gray-600">Feedback Form URL</Label>
               <Input
                 type="text"
-                value="http://localhost:3000/feedback"
+                value="https://ai-powered-real-time-feedback.vercel.app/feedback"
                 readOnly
                 className="mt-1"
               />
@@ -258,7 +258,7 @@ const Home = () => {
             <Button
               className="w-full mt-2"
               onClick={() => {
-                navigator.clipboard.writeText("http://localhost:3000/feedback");
+                navigator.clipboard.writeText("https://ai-powered-real-time-feedback.vercel.app/feedback");
                 alert("Link copied to clipboard!");
               }}
             >

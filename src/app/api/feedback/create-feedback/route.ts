@@ -71,7 +71,7 @@ export async function POST(req: Request) {
       // Save the feedback in the database
       await newFeedback.save();
 
-      pusher.trigger('feedback-channel', 'feedback-updated', {
+     await pusher.trigger('feedback-channel', 'feedback-updated', {
         feedback: newFeedback,
       });
 
@@ -105,3 +105,6 @@ export async function POST(req: Request) {
     );
   }
 }
+
+
+/*await pusherServer.trigger(chatId, "new-message", newMessage) */

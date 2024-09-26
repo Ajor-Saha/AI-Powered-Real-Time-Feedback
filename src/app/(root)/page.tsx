@@ -59,23 +59,6 @@ const Home = () => {
   const router = useRouter();
   const [feedbackDetails, setFeedbackDetails] = useState<any>({});
 
-  useEffect(() => {
-    // Initialize Pusher
-    // Subscribe to the feedback channel
-    const channel = pusherClient.subscribe("feedback-channel");
-
-    // Bind to the feedback-updated event
-    channel.bind("feedback-updated", (data: { feedback: Feedback }) => {
-      setCustomerFeedback((prev) => [...prev, data.feedback]);
-    });
-
-    // Cleanup function to unsubscribe
-    return () => {
-      channel.unbind_all();
-      channel.unsubscribe();
-    };
-  }, []);
-
   const fetchCustomerFeedback = useCallback(async () => {
     try {
       const response = await axios.get("/api/feedback/get-feedback");
@@ -127,6 +110,24 @@ const Home = () => {
     return `${day}/${month}/${year}`;
   };
 
+  useEffect(() => {
+    pusherClient.subscribe("feedback-channel");
+  
+    const handleNewFeedback = (data: { feedback: Feedback }) => {
+      setCustomerFeedback((prev) => [data.feedback, ...prev]);
+    };
+  
+    pusherClient.bind("feedback-updated", handleNewFeedback);
+  
+    // Cleanup function to unsubscribe and unbind the event listener
+    return () => {
+      pusherClient.unsubscribe("feedback-channel");
+      pusherClient.unbind("feedback-updated", handleNewFeedback);
+    };
+  }, []);
+  
+
+
   const handleDeleteFeedback = async (feedbackId: string) => {
     try {
       const response = await axios.delete(
@@ -155,8 +156,6 @@ const Home = () => {
       });
     }
   };
-
-  console.log(feedbackDetails);
 
   return (
     <div className="ml-5 pb-10">
@@ -258,7 +257,9 @@ const Home = () => {
             <Button
               className="w-full mt-2"
               onClick={() => {
-                navigator.clipboard.writeText("https://ai-powered-real-time-feedback.vercel.app/feedback");
+                navigator.clipboard.writeText(
+                  "https://ai-powered-real-time-feedback.vercel.app/feedback"
+                );
                 alert("Link copied to clipboard!");
               }}
             >

@@ -11,7 +11,7 @@ import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -19,6 +19,7 @@ function SignInForm() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const { toast } = useToast();
+  const { data: session } = useSession();
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -26,6 +27,12 @@ function SignInForm() {
       password: "",
     },
   });
+
+  useEffect(() => {
+    if (session) {
+      router.push("/"); // Redirect to homepage
+    }
+  }, [session, router]);
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
     setLoading(true);
